@@ -25,25 +25,21 @@ class MainActivity : AppCompatActivity() {
     private var gyroscopeSensor: Sensor? = null
     private val currentRotation: Array<Float> = arrayOf(0.0f, 0.0f, 0.0f)
 
-    // region accelerometerListener
-    /*
-    private val accelerometerListener = object : SensorEventListener {
-        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
-
-        override fun onSensorChanged(event: SensorEvent) {
-            // Manejar los cambios en el acelerómetro aquí
-            val x = event.values[0]
-            val y = event.values[1]
-            val z = event.values[2]
-
-            // Actualizar la posición de la imagen en función de los valores del acelerómetro
-            // binding.imageView.x = x
-            // binding.imageView.y = y
-
-        }
-    }
-    */
-    // endregion
+    //private val accelerometerListener = object : SensorEventListener {
+    //    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
+    //
+    //    override fun onSensorChanged(event: SensorEvent) {
+    //        // Manejar los cambios en el acelerómetro aquí
+    //        val x = event.values[0]
+    //        val y = event.values[1]
+    //        val z = event.values[2]
+    //
+    //        // Actualizar la posición de la imagen en función de los valores del acelerómetro
+    //        // binding.imageView.x = x
+    //        // binding.imageView.y = y
+    //
+    //    }
+    //}
 
     private val gyroscopeListener = object : SensorEventListener {
         override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
