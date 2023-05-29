@@ -34,16 +34,21 @@ class LoginActivity : AppCompatActivity() {
 
         // button
         binding.btnLogin.setOnClickListener {
-            val ci = binding.txtCi.text.toString().toInt()
+            val ci = binding.txtCi.text.toString().toIntOrNull()
             val password = binding.txtPassword.text.toString()
-            authenticate(ci, password)
+
+            if (ci != null && password.isNotEmpty()) {
+                authenticate(ci, password)
+            } else {
+                showToast("Ingresa un CI válido y una contraseña")
+            }
         }
     }
     private fun authenticate(ci: Int, password: String) {
         loginApiManager.authenticate(ci, password) { usuario ->
             usuario?.let {
                 when (it.tipousuario.tipo) {
-                    "Jefe" -> showToast("¡ES EL J3FE!\nD:")
+                    "Jefe" -> showToast("¡ES EL J3FE!:")
                     "Empleado" -> login_empleado(ci, password)
                     "Cliente" -> login_cliente(ci, password)
                     else -> showToast("¡Acceso no autorizado!")
@@ -74,14 +79,13 @@ class LoginActivity : AppCompatActivity() {
                 MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
                 MyApplication.SharedPreferences.save_tipo_usuario(it.usuario.tipousuario.tipo)
                 start_()
-            }
+            } ?: showToast("La respuesta está vacía")
         }
     }
 
     private fun start_() {
-//        showToast("Inicio de sesión exitoso")
-        val intent = Intent(this, TestActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, TestActivity::class.java))
+        finish()
     }
 
     private fun showToast(text: String?) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
