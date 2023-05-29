@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.pollos_silver.R
+import com.example.pollos_silver.MyApplication
 import com.example.pollos_silver.databinding.ActivityLoginBinding
 import com.example.register.Interfaces.LoginService
 import com.example.register.Models.UserLoginInfo
@@ -24,6 +24,15 @@ class LoginActivity : AppCompatActivity() {
         val loginService = retrofit.create(LoginService::class.java)
         loginApiManager = LoginApiManager(loginService, this)
 
+        if (MyApplication.SharedPreferences.get_tipo_usuario().isNotEmpty()) {
+        // El usuario ya inicio session
+            authenticate(
+                MyApplication.SharedPreferences.get_ci(),
+                MyApplication.SharedPreferences.get_contrasena()
+            )
+        }
+
+        // button
         binding.btnLogin.setOnClickListener {
             val ci = binding.txtCi.text.toString().toInt()
             val password = binding.txtPassword.text.toString()
@@ -46,8 +55,12 @@ class LoginActivity : AppCompatActivity() {
     private fun login_empleado(ci: Int, password: String) {
         loginApiManager.login_empleado(ci, password) { empleado ->
             empleado?.let {
-                UserLoginInfo.usuario = it
-                iniciarSecundaryActivity()
+//                UserLoginInfo.usuario = it
+                MyApplication.Usuario = it
+                MyApplication.SharedPreferences.save_ci(it.usuario.ci)
+                MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
+                MyApplication.SharedPreferences.save_tipo_usuario(it.usuario.tipousuario.tipo)
+                start_()
             } ?: showToast("La respuesta está vacía")
         }
     }
@@ -55,16 +68,20 @@ class LoginActivity : AppCompatActivity() {
     private fun login_cliente(ci: Int, password: String) {
         loginApiManager.login_cliente(ci, password) { cliente ->
             cliente?.let {
-                UserLoginInfo.usuario = it
-                iniciarSecundaryActivity()
+//                UserLoginInfo.usuario = it
+                MyApplication.Usuario = it
+                MyApplication.SharedPreferences.save_ci(it.usuario.ci)
+                MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
+                MyApplication.SharedPreferences.save_tipo_usuario(it.usuario.tipousuario.tipo)
+                start_()
             }
         }
     }
 
-    private fun iniciarSecundaryActivity() {
-        showToast("Inicio de sesión exitoso")
-//        val intent = Intent(this, SecundaryActivity::class.java)
-//        startActivity(intent)
+    private fun start_() {
+//        showToast("Inicio de sesión exitoso")
+        val intent = Intent(this, TestActivity::class.java)
+        startActivity(intent)
     }
 
     private fun showToast(text: String?) = Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
