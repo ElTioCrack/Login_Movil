@@ -4,7 +4,6 @@ import android.app.Application
 import com.example.pollos_silver.utils.SharedPreferencesManager
 import com.example.register.Models.Cliente
 import com.example.register.Models.Empleado
-import com.example.register.Models.UserLoginInfo
 
 class MyApplication : Application() {
     companion object {

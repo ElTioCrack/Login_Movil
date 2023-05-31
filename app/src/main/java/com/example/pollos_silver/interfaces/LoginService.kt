@@ -10,14 +10,14 @@ import retrofit2.http.POST
 
 interface LoginService {
     @FormUrlEncoded
-    @POST("Login/PHP/authenticate.php")
+    @POST("login/php/authenticate.php")
     fun authenticate(
         @Field("ci") ci: Int,
         @Field("password") password: String
     ): Call<Usuario>
 
     @FormUrlEncoded
-    @POST("Login/PHP/login_empleado.php")
+    @POST("login/php/login_empleado.php")
     fun login_empleado(
         @Field("ci") ci: Int,
         @Field("password") password: String,
@@ -25,7 +25,7 @@ interface LoginService {
     ): Call<Empleado>
 
     @FormUrlEncoded
-    @POST("Login/PHP/login_cliente.php")
+    @POST("login/php/login_cliente.php")
     fun login_cliente(
         @Field("ci") ci: Int,
         @Field("password") password: String
