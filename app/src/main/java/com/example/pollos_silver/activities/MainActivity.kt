@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.pollos_silver.R
 import com.example.pollos_silver.databinding.ActivityMainBinding
 import android.hardware.Sensor
 import android.hardware.SensorEvent

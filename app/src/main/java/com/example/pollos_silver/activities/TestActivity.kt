@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pollos_silver.MyApplication
-import com.example.pollos_silver.R
 import com.example.pollos_silver.databinding.ActivityTestBinding
 
 class TestActivity : AppCompatActivity() {

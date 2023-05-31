@@ -7,7 +7,6 @@ import android.widget.Toast
 import com.example.pollos_silver.MyApplication
 import com.example.pollos_silver.databinding.ActivityLoginBinding
 import com.example.register.Interfaces.LoginService
-import com.example.register.Models.UserLoginInfo
 import com.example.register.networks.LoginApiManager
 import com.example.register.networks.RetrofitInstance
 
@@ -60,7 +59,6 @@ class LoginActivity : AppCompatActivity() {
     private fun login_empleado(ci: Int, password: String) {
         loginApiManager.login_empleado(ci, password) { empleado ->
             empleado?.let {
-//                UserLoginInfo.usuario = it
                 MyApplication.Usuario = it
                 MyApplication.SharedPreferences.save_ci(it.usuario.ci)
                 MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
@@ -73,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
     private fun login_cliente(ci: Int, password: String) {
         loginApiManager.login_cliente(ci, password) { cliente ->
             cliente?.let {
-//                UserLoginInfo.usuario = it
                 MyApplication.Usuario = it
                 MyApplication.SharedPreferences.save_ci(it.usuario.ci)
                 MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
