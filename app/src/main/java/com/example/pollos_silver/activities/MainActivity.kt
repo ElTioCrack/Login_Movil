@@ -128,7 +128,6 @@ class MainActivity : AppCompatActivity() {
 
         // buttons
         binding.btnLogin.setOnClickListener {
-            MyApplication.SharedPreferences.clear()
             start_LoginActivity()
         }
 
