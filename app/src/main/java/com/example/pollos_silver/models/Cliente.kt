@@ -6,9 +6,6 @@ data class Cliente(
     @SerializedName("usuario")
     var usuario: Usuario,
 
-    @SerializedName("coordenadas")
-    var coordenadas: Coordenadas,
-
     @SerializedName("nombres")
     var nombres: String,
 

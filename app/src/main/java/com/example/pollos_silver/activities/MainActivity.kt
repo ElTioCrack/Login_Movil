@@ -19,9 +19,13 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pollos_silver.MyApplication
+import com.example.register.Interfaces.LoginService
+import com.example.register.networks.LoginApiManager
+import com.example.register.networks.RetrofitInstance
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var loginApiManager: LoginApiManager
 
     // Handler - Timer
     private lateinit var handler: Handler
@@ -89,6 +93,11 @@ class MainActivity : AppCompatActivity() {
         // Bloqueamos rotacion de la pantalla
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        // Inicio de sesion automatico
+        val retrofit = RetrofitInstance.getRetrofitInstance()
+        val loginService = retrofit.create(LoginService::class.java)
+        loginApiManager = LoginApiManager(loginService, this)
+
         // Handler - Timers
         handler = Handler(Looper.getMainLooper())
         startTimer()
@@ -113,11 +122,13 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 // La autenticación biométrica no está disponible en el dispositivo
+                star_session()
             }
         }
 
         // buttons
         binding.btnLogin.setOnClickListener {
+            MyApplication.SharedPreferences.clear()
             start_LoginActivity()
         }
 
@@ -177,12 +188,13 @@ class MainActivity : AppCompatActivity() {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 // Se cancelo la autenticación por huella
-                Toast.makeText(this@MainActivity, "No se pudo reconocer ninguna huella digital", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@MainActivity, "No se pudo reconocer ninguna huella digital", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 // La autenticación fue exitosa, Huella correcta
-                start_LoginActivity()
+                star_session()
+//                start_LoginActivity()
             }
 
             override fun onAuthenticationFailed() {
@@ -249,7 +261,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // xd
+    // Botones
     private fun start_LoginActivity(){
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
@@ -258,4 +270,39 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
+
+    // AutoInicio de sesion:
+    private fun star_session() {
+        val tipo_usuario = MyApplication.SharedPreferences.get_tipo_usuario()
+
+        if (tipo_usuario.isNotEmpty()) {
+            val ci = MyApplication.SharedPreferences.get_ci()
+            val password = MyApplication.SharedPreferences.get_contrasena()
+
+            when (tipo_usuario) {
+                "Empleado" -> {
+                    loginApiManager.login_empleado(ci, password) { empleado ->
+                        empleado?.let {
+                            MyApplication.Usuario = it
+                            start_()
+                        }
+                    }
+                }
+                "Cliente" -> {
+                    loginApiManager.login_cliente(ci, password) { cliente ->
+                        cliente?.let {
+                            MyApplication.Usuario = it
+                            start_()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun start_() {
+        startActivity(Intent(this, TestActivity::class.java))
+        finish()
+    }
+
 }

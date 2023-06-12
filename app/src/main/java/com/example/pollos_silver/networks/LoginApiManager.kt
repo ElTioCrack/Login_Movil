@@ -1,11 +1,13 @@
 package com.example.register.networks
 
+import android.app.AlertDialog
 import android.content.Context
-import android.widget.Toast
+import com.example.pollos_silver.models.ErrorResponse
 import com.example.register.Interfaces.LoginService
 import com.example.register.Models.Cliente
 import com.example.register.Models.Empleado
 import com.example.register.Models.Usuario
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,20 +39,30 @@ class LoginApiManager(private val loginService: LoginService, private val contex
                     if(response !== null) {
                         onResponse(response.body())
                     } else {
-                        showToast("response: null\n${response}")
+                        showMessageDialog("", "Respuesta Vacia")
                     }
                 } else {
-                    showToast("!isSuccessful:\n${response.code()}")
+                    val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                    showMessageDialog(errorResponse.errorCode.toString(), errorResponse.errorMessage)
                 }
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                showToast("onFailure:\n${t.message}")
+                showMessageDialog("onFailure", t.message.toString())
             }
         })
     }
 
-    private fun showToast(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessageDialog(title: String, message: String) {
+        val builder = AlertDialog.Builder(context)
+        builder
+            .setTitle("ERROR: ${title}")
+            .setMessage(message)
+            .setPositiveButton("Aceptar") { dialog, _ ->
+                dialog.dismiss()
+            }
+        val dialog = builder.create()
+        dialog.show()
     }
 }
+

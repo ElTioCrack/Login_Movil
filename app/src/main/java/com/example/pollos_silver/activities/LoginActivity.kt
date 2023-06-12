@@ -23,14 +23,6 @@ class LoginActivity : AppCompatActivity() {
         val loginService = retrofit.create(LoginService::class.java)
         loginApiManager = LoginApiManager(loginService, this)
 
-        if (MyApplication.SharedPreferences.get_tipo_usuario().isNotEmpty()) {
-        // El usuario ya inicio session
-            authenticate(
-                MyApplication.SharedPreferences.get_ci(),
-                MyApplication.SharedPreferences.get_contrasena()
-            )
-        }
-
         // button
         binding.btnLogin.setOnClickListener {
             val ci = binding.txtCi.text.toString().toIntOrNull()
@@ -52,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
                     "Cliente" -> login_cliente(ci, password)
                     else -> showToast("¡Acceso no autorizado!")
                 }
-            } ?: showToast("El usuario no existe o los datos son incorrectos")
+            }
         }
     }
 
@@ -60,11 +52,11 @@ class LoginActivity : AppCompatActivity() {
         loginApiManager.login_empleado(ci, password) { empleado ->
             empleado?.let {
                 MyApplication.Usuario = it
-                MyApplication.SharedPreferences.save_ci(it.usuario.ci)
-                MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
+                MyApplication.SharedPreferences.save_ci(ci)
+                MyApplication.SharedPreferences.save_contrasena(password)
                 MyApplication.SharedPreferences.save_tipo_usuario(it.usuario.tipousuario.tipo)
                 start_()
-            } ?: showToast("La respuesta está vacía")
+            }
         }
     }
 
@@ -72,11 +64,11 @@ class LoginActivity : AppCompatActivity() {
         loginApiManager.login_cliente(ci, password) { cliente ->
             cliente?.let {
                 MyApplication.Usuario = it
-                MyApplication.SharedPreferences.save_ci(it.usuario.ci)
-                MyApplication.SharedPreferences.save_contrasena(it.usuario.contrasena)
+                MyApplication.SharedPreferences.save_ci(ci)
+                MyApplication.SharedPreferences.save_contrasena(password)
                 MyApplication.SharedPreferences.save_tipo_usuario(it.usuario.tipousuario.tipo)
                 start_()
-            } ?: showToast("La respuesta está vacía")
+            }
         }
     }
 

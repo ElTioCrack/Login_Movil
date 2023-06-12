@@ -9,6 +9,7 @@ class MyApplication : Application() {
     companion object {
         lateinit var SharedPreferences: SharedPreferencesManager
         var Usuario: Any? = null
+
     }
 
     override fun onCreate() {
@@ -20,7 +21,7 @@ class MyApplication : Application() {
         return when (Usuario) {
             is Empleado -> (Usuario as Empleado).usuario.tipousuario.tipo
             is Cliente -> (Usuario as Cliente).usuario.tipousuario.tipo
-            else -> "a"
+            else -> ""
         }
     }
 }
